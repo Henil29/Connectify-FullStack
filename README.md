@@ -3,7 +3,7 @@
 **Connectify** is a full-stack social media and real-time chat application built with the **MERN stack**.
 
 <p align="center">
-  <img src="https://res.cloudinary.com/dr3lrzqsa/image/upload/v1748875456/image_ms7rct.jpg" alt="Chat Screenshot" width="450"/>
+  <img src="./image.jpg" alt="Connectify" width="450"/>
 </p>
 
 ## 🚀 Features
