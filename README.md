@@ -100,16 +100,3 @@ This project is open-source under the [MIT License](LICENSE).
 ## 👨‍💻 Author
 
 Developed with ❤️ by **Henil**
-
----
-
-### ✅ Add This to the End of Your README.md  
-Place it below your `Features`, `Tech Stack`, or `Setup Instructions` sections.
-
-Would you like me to generate:
-- A **banner/logo**
-- **Markdown badges** (e.g., GitHub stars, license, tech used)
-- An **ERD or architecture diagram**  
-
-Let me know — I can help generate them right away.
-
