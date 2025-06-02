@@ -1,7 +1,7 @@
 # 🌐 Connectify – MERN Stack Social + Chat App
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]
-[![Node.js CI](https://github.com/Henil29/Connectify/actions/workflows/node.js.yml/badge.svg)]
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Node.js CI](https://github.com/Henil29/Connectify/actions/workflows/node.js.yml/badge.svg)
 
 **Connectify** is a full-stack social media and real-time chat application built with the **MERN stack**.
 
