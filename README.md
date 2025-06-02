@@ -25,10 +25,10 @@
 | Category       | Technologies                          |
 |----------------|---------------------------------------|
 | **Frontend**   | React.js, Axios, Socket.IO Client     |
-| **Backend**    | Node.js, Express.js, Socket.IO       |
-| **Database**   | MongoDB, Mongoose                    |
-| **Security**   | JWT, bcrypt.js                       |
-| **Deployment** | (Add your deployment tools)          |
+| **Backend**    | Node.js, Express.js, Socket.IO        |
+| **Database**   | MongoDB, Mongoose                     |
+| **Security**   | JWT, bcrypt.js                        |
+| **Deployment** | Render                                |
 
 ## 📦 Installation
 
