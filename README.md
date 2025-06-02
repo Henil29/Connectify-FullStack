@@ -42,18 +42,17 @@
    git clone https://github.com/Henil29/Connectify.git
    cd Connectify
 
-## 2. 🔧 Backend Setup
+## 2. 🔧 Backend Setup:
+    cd server
+    npm install
 
-  cd server
-  npm install
 
+# Create a .env file inside the /server folder:
+    MONGO_URI=your_mongodb_url
+    JWT_SECRET=your_secret
 
-  Create a .env file inside the /server folder:
-  MONGO_URI=your_mongodb_url
-  JWT_SECRET=your_secret
-
-  Start backend:
-  npm start
+  # Start backend:
+    npm start
 
 ## 3. Frontend setup:
     cd ../client
