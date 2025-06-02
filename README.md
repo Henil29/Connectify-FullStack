@@ -37,7 +37,80 @@
 - MongoDB v5+
 - npm/yarn
 
-1. Clone the repository:
-   ```bash
+## 1. Clone the repository:
+   
    git clone https://github.com/Henil29/Connectify.git
    cd Connectify
+
+## 2. 🔧 Backend Setup
+
+  cd server
+  npm install
+
+
+  Create a .env file inside the /server folder:
+  MONGO_URI=your_mongodb_url
+  JWT_SECRET=your_secret
+
+  Start backend:
+  npm start
+
+## 3. Frontend setup:
+    cd ../client
+    npm install
+    npm start
+
+## 🧠 Upcoming Features
+
+- 🖼 Profile pictures & bio  
+- 📩 Message history and seen status  
+- 🌙 Dark mode toggle  
+- 📸 Image/file sharing in chat  
+- 📲 Push notifications  
+- 🎥 Video/voice calls  
+
+---
+
+## 🌐 Live Demo
+
+**Coming Soon**  
+*(Add Vercel/Render/Netlify deployment links once hosted)*
+
+---
+
+## 📸 Screenshots
+
+*(Add UI screenshots here after building the interface)*  
+Example:
+
+
+![Chat UI](./screenshots/chat-ui.png)
+
+## 🤝 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first  
+to discuss what you would like to change.
+
+---
+
+## 📄 License
+
+This project is open-source under the [MIT License](LICENSE).
+
+
+## 👨‍💻 Author
+
+Developed with ❤️ by **Henil**
+
+---
+
+### ✅ Add This to the End of Your README.md  
+Place it below your `Features`, `Tech Stack`, or `Setup Instructions` sections.
+
+Would you like me to generate:
+- A **banner/logo**
+- **Markdown badges** (e.g., GitHub stars, license, tech used)
+- An **ERD or architecture diagram**  
+
+Let me know — I can help generate them right away.
+
