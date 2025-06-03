@@ -94,7 +94,7 @@ const PostCard = ({ type, value }) => {
                         className="rounded-xl"
                     />
                 ) : (
-                    <div className="relative w-full h-[400px] rounded-xl overflow-hidden z-20">
+                    <div className="relative rounded-xl overflow-hidden z-20">
                         <video
                             ref={videoRef}
                             src={value.post.url}
