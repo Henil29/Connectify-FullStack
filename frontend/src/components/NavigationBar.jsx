@@ -10,7 +10,7 @@ const NavigationBar = () => {
     const tab = location.pathname;
 
     return (
-        <div className='fixed bottom-0 w-full bg-white py-3'>
+        <div className='fixed bottom-0 w-full bg-white py-3 z-50'>
             <div className="flex justify-around">
                 <Link to="/" className='flex flex-col items-center text-2xl'>
                     {tab === "/" ? <AiFillHome /> : <AiOutlineHome />}

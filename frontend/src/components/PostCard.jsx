@@ -4,6 +4,8 @@ import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContex';
 import { Link } from 'react-router-dom';
+import { LoadingAnimation } from './Loading';
+import { MdDelete } from "react-icons/md";
 
 const formatTime = (createdAt) => {
     const now = new Date();
@@ -25,7 +27,7 @@ const PostCard = ({ type, value }) => {
     const [isLike, setIsLike] = useState(false);
     const [show, setShow] = useState(false);
     const { user } = UserData();
-    const { likePost, addComment } = PostData();
+    const { likePost, addComment, addLoading } = PostData();
     const videoRef = useRef(null);
 
     useEffect(() => {
@@ -76,9 +78,10 @@ const PostCard = ({ type, value }) => {
                             </div>
                         </Link>
                     </div>
-                    <button className="hover:bg-gray-100 rounded-full p-2 text-xl text-gray-500">
+
+                    {value.owner._id === user._id && <button className="hover:bg-gray-100 rounded-full p-2 text-xl text-gray-500">
                         <BsThreeDotsVertical />
-                    </button>
+                    </button>}
                 </div>
 
                 <div className="relative z-20">
@@ -88,7 +91,7 @@ const PostCard = ({ type, value }) => {
                 {type === 'post' ? (
                     <img
                         src={value.post.url}
-                        className="w-full h-60 object-cover rounded-xl"
+                        className="rounded-xl"
                     />
                 ) : (
                     <div className="relative w-full h-[400px] rounded-xl overflow-hidden z-20">
@@ -151,7 +154,8 @@ const PostCard = ({ type, value }) => {
                                         comment={e.comment}
                                         profilePic={e.user.profilePic.url}
                                         createdAt={e.createdAt}
-                                        userId= {e._id}
+                                        userId={e.user._id}
+                                        cur_user={value.owner._id}
                                         key={e._id}
                                     />
                                 ))
@@ -161,12 +165,12 @@ const PostCard = ({ type, value }) => {
                         </div>
                         <form className="flex gap-3 mb-4" onSubmit={addCommentHandler}>
                             <input
-                                type="text"
+                                type="text" required
                                 className="flex-1 border border-gray-700 bg-gray-100 rounded-md px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="Enter comment" value={comment} onChange={e => setComment(e.target.value)}
                             />
-                            <button type='submit' className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm">
-                                Add
+                            <button disabled={addLoading} type='submit' className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm">
+                                {addLoading ? <LoadingAnimation /> : "Add"}
                             </button>
                         </form>
                     </div>
@@ -186,7 +190,8 @@ const PostCard = ({ type, value }) => {
                                         comment={e.comment}
                                         profilePic={e.user.profilePic.url}
                                         createdAt={e.createdAt}
-                                        userId= {e._id}
+                                        userId={e.user._id}
+                                        cur_user={value.owner._id}
                                         key={e._id}
                                     />
                                 ))
@@ -196,12 +201,12 @@ const PostCard = ({ type, value }) => {
                         </div>
                         <form className="flex gap-3 mt-3" onSubmit={addCommentHandler}>
                             <input
-                                type="text"
+                                type="text" required
                                 className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="Enter comment" value={comment} onChange={e => setComment(e.target.value)}
                             />
-                            <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm">
-                                Add
+                            <button disabled={addLoading} className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm">
+                                {addLoading ? <LoadingAnimation /> : "Add"}
                             </button>
                         </form>
                     </>
@@ -213,18 +218,24 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard;
 
-export const Comment = ({ name, comment, profilePic, createdAt, userId }) => {
+export const Comment = ({ name, comment, profilePic, createdAt, userId, cur_user }) => {
     return (
         <div className="flex items-start space-x-3">
-            <Link to={`/user/${userId}`}>
-                <img src={profilePic} alt={name} className="w-8 h-8 rounded-full object-cover" />
-            </Link>
-            <div>
-                <Link to={`/user/${userId}`}>
-                    <p className="text-gray-700 font-medium text-sm">
-                        {name} <span className="text-gray-400 text-xs ml-2">{formatTime(createdAt)}</span>
-                    </p>
-                </Link>
+            <img src={profilePic} alt={name} className="w-8 h-8 rounded-full object-cover" />
+            <div className="bg-white rounded-md px-2 py-1 flex-1">
+                <div className="flex items-center space-x-2">
+                    <Link to={`/user/${userId}`}>
+                        <p className="text-gray-700 font-medium text-sm">
+                            {name}
+                            <span className="text-gray-400 text-xs ml-2">{formatTime(createdAt)}</span>
+                        </p>
+                    </Link>
+                    {userId === cur_user && (
+                        <button className="text-red-500 text-base hover:text-red-600">
+                            <MdDelete />
+                        </button>
+                    )}
+                </div>
                 <p className="text-gray-900 text-sm">{comment}</p>
             </div>
         </div>

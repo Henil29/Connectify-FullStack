@@ -9,12 +9,13 @@ import Account from './pages/Account';
 import NavigationBar from './components/NavigationBar';
 import NotFound from './components/NotFound';
 import Reels from './pages/Reels';
+import { Loading } from './components/Loading';
 
 function App() {
   const { loading, isAuth, user } = UserData()
   return (
     <>
-      { loading? <h1>Loadding</h1>:
+      { loading? <Loading/>:
 
         <BrowserRouter>
           <Routes>

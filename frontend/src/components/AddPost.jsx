@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { PostData } from '../context/PostContex'
+import { LoadingAnimation } from './Loading'
 
 function AddPost({ type }) {
     const [caption, setCaption] = useState("")
-    const [file, setFile] = useState("")
-    const [filePrev, setFilePrev] = useState("")
+    const [file, setFile] = useState(null)
+    const [filePrev, setFilePrev] = useState(null)
 
-    const {addPost}=PostData();
+    const { addPost, addLoading } = PostData();
     const changeFileHandler = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -16,12 +17,12 @@ function AddPost({ type }) {
             setFile(file);
         }
     }
-    const submitHandler = (e) =>{
+    const submitHandler = (e) => {
         e.preventDefault();
-        const formdata=new FormData()
-        formdata.append('caption',caption)
-        formdata.append('file',file)
-        addPost(formdata, setFile, setFilePrev, setCaption,type)
+        const formdata = new FormData()
+        formdata.append('caption', caption)
+        formdata.append('file', file)
+        addPost(formdata, setFile, setFilePrev, setCaption, type)
     }
     return (
         <>
@@ -39,7 +40,7 @@ function AddPost({ type }) {
                             onChange={(e) => setCaption(e.target.value)}
                         />
                         <input
-                            type="file"
+                            type="file" required
                             accept={type === "post" ? "image/*" : "video/*"}
                             onChange={changeFileHandler}
                             className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -54,17 +55,19 @@ function AddPost({ type }) {
                                         className="h-64 w-auto rounded-lg shadow-md object-cover"
                                     />
                                 ) : (
-                                    <video controls controlsList="nodownload" src={filePrev} className="w-full max-w-[300px] max-h-[60vh] rounded-lg shadow object-contain"/>
+                                    <video controls controlsList="nodownload" src={filePrev} className="w-full max-w-[300px] max-h-[60vh] rounded-lg shadow object-contain" />
                                 )}
                             </div>
                         )}
 
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200"
-                        >
-                            + Add {type === "post" ? <span>Post</span> : <span>Reel</span>}
+                        <button disabled={addLoading} type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200 flex items-center justify-center">
+                            {addLoading ? (
+                                <LoadingAnimation value={type === "post" ? "Post" : "Reel"} />
+                            ) : (
+                                "+ Add"
+                            )}
                         </button>
+
                     </form>
                 </div>
             </div>

@@ -3,11 +3,12 @@ import AddPost from '../components/AddPost'
 import { PostData } from '../context/PostContex'
 import PostCard from '../components/PostCard'
 import { FaArrowUp, FaArrowDownLong } from "react-icons/fa6";
+import { Loading } from '../components/Loading';
 
 const Reels = () => {
-    const { reels } = PostData()
+    const { reels, loading } = PostData()
     const [index, setIndex] = useState(0)
-    
+
     const prevReel = () => {
         if (index === 0) {
             setIndex(reels.length - 1)
@@ -23,6 +24,9 @@ const Reels = () => {
         else {
             setIndex(index + 1)
         }
+    }
+    if (loading) {
+        return <Loading/>
     }
     return (
         <div className="min-h-screen bg-gray-100 py-8 px-4">
