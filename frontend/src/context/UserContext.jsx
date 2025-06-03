@@ -70,11 +70,22 @@ export const UserContextProvider = ({ children }) => {
             toast.error(error.response.data.message)
         }
     }
+
+    async function followUser(id,fetchUser) {
+        try {
+            const { data } = await axios.post("/api/user/follow/" + id)
+            toast.success(data.message)
+            fetchUser();
+
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
     useEffect(() => {
         fetchUser()
     }, [])
     return (
-        <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser }}>
+        <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser }}>
             {children}
             <Toaster />
         </UserContext.Provider>

@@ -10,6 +10,7 @@ import NavigationBar from './components/NavigationBar';
 import NotFound from './components/NotFound';
 import Reels from './pages/Reels';
 import { Loading } from './components/Loading';
+import UserAccount from './pages/UserAccount';
 
 function App() {
   const { loading, isAuth, user } = UserData()
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={isAuth ? <Home /> : <Login />} />
             <Route path="/reels" element={isAuth ? <Reels /> : <Login />} />
             <Route path="/account" element={isAuth ? <Account user={user}/> : <Login />} />
+            <Route path="/user/:id" element={isAuth ? <UserAccount user={user}/> : <Login />} />
             <Route path="/login" element={!isAuth ? <Login /> : <Home />} />
             <Route path="/register" element={!isAuth ? <Register /> : <Home />} />
             <Route path="*" element={<NotFound/>} />
