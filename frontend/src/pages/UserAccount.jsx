@@ -5,6 +5,7 @@ import PostCard from '../components/PostCard';
 import axios from 'axios';
 import { Loading } from '../components/Loading';
 import { UserData } from '../context/UserContext';
+import Modal from '../components/Modal';
 
 const UserAccount = ({ user: loggedInUser }) => {
 
@@ -27,7 +28,7 @@ const UserAccount = ({ user: loggedInUser }) => {
     }
     useEffect(() => {
         fetchUser()
-    }, [])
+    }, [params.id])
 
     let myPosts;
     if (posts) {
@@ -54,6 +55,25 @@ const UserAccount = ({ user: loggedInUser }) => {
             setFollowed(true)
         }
     }, [user])
+
+    const [show, setShow] = useState(false)
+    const [followersData, setFollowersData] = useState([])
+    const [followingData, setFollowingData] = useState([])
+    const [tab, setTab] = useState('followers');
+    async function followData() {
+        try {
+            const { data } = await axios.get(`/api/user/followdata/${user._id}`)
+            setFollowersData(data.followers)
+            setFollowingData(data.followings)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        if (user && user._id) {
+            followData();
+        }
+    }, [user])
     if (loading) {
         return <Loading />
     }
@@ -63,6 +83,9 @@ const UserAccount = ({ user: loggedInUser }) => {
                 <>
 
                     <div className="bg-gray-100 flex flex-col gap-4 items-center justify-center pt-3">
+                        {
+                            show && <Modal value={[followersData,followingData]} setShow={setShow} defaultTab={tab} />
+                        }
                         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md mt-14">
                             <div className="image flex flex-col justify-between mb-4 gap-4">
                                 <img src={user.profilePic.url} alt="" className="w-[180px] h-[180px] rounded-full object-cover shadow-md"
@@ -72,8 +95,8 @@ const UserAccount = ({ user: loggedInUser }) => {
                                 <p className='text-gray-800 font-semibold '>{user.name}</p>
                                 <p className='text-gray-500 text-sm'>{user.email}</p>
                                 <p className='text-gray-500 text-sm'>{user.gender}</p>
-                                <p className='text-gray-500 text-sm'>{user.followers.length} followers</p>
-                                <p className='text-gray-500 text-sm'>{user.following.length} following</p>
+                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => {setShow(true); setTab('followers')}}>{user.followers.length} followers</p>
+                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => {setShow(true); setTab('following');}}>{user.following.length} following</p>
                                 {
                                     user._id === loggedInUser._id ? "" :
                                         <>
@@ -85,7 +108,7 @@ const UserAccount = ({ user: loggedInUser }) => {
                                                 >
                                                     {followed ? 'Unfollow' : 'Follow'}
                                                 </button>
-                                                
+
                                                 <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-200">
                                                     Message
                                                 </button>

@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContex'
 import PostCard from '../components/PostCard';
+import { Loading } from '../components/Loading';
+import Modal from '../components/Modal';
+import axios from 'axios';
 
 const Account = ({ user }) => {
 
     const navigate = useNavigate();
     const { logoutUser } = UserData()
     const { posts, reels } = PostData()
+    const [loading, setLoading] = useState(true)
 
     let myPosts;
     if (posts) {
@@ -24,11 +28,39 @@ const Account = ({ user }) => {
     const logoutHandler = () => {
         logoutUser(navigate)
     }
+    const [show, setShow] = useState(false)
+    const [followersData, setFollowersData] = useState([])
+    const [followingData, setFollowingData] = useState([])
+    const [tab, setTab] = useState('followers');
+    async function followData() {
+        try {
+            const { data } = await axios.get(`/api/user/followdata/${user._id}`)
+            setFollowersData(data.followers)
+            setFollowingData(data.followings)
+            setLoading(false)
+
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (user && user._id) {
+            followData();
+        }
+    }, [user])
+
+    if (loading) {
+        return <Loading />
+    }
     return (
         <>
             {user && (
                 <>
-
+                    {
+                        show && <Modal value={[followersData, followingData]} setShow={setShow} defaultTab={tab} />
+                    }
                     <div className="bg-gray-100 flex flex-col gap-4 items-center justify-center pt-3">
                         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md mt-14">
                             <div className="image flex flex-col justify-between mb-4 gap-4">
@@ -39,14 +71,14 @@ const Account = ({ user }) => {
                                 <p className='text-gray-800 font-semibold '>{user.name}</p>
                                 <p className='text-gray-500 text-sm'>{user.email}</p>
                                 <p className='text-gray-500 text-sm'>{user.gender}</p>
-                                <p className='text-gray-500 text-sm'>{user.followers.length} followers</p>
-                                <p className='text-gray-500 text-sm'>{user.following.length} following</p>
+                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => { setShow(true); setTab('followers') }}>{user.followers.length} followers</p>
+                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => { setShow(true); setTab('following'); }}>{user.following.length} following</p>
                                 <button onClick={logoutHandler} className="mt-4 w-28 h-10 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow transition duration-200">Logout</button>
                             </div>
                         </div>
                         <div className="controls flex justify-center items-center bg-white p-4 rounded-md gap-7 mt-6">
-                            <button onClick={()=>{setType('post')}}>Posts</button>
-                            <button onClick={()=>{setType('reel')}}>Reels</button>
+                            <button onClick={() => { setType('post') }}>Posts</button>
+                            <button onClick={() => { setType('reel') }}>Reels</button>
                         </div>
                         {
                             type === "post" &&
