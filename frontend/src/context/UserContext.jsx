@@ -8,8 +8,7 @@ export const UserContextProvider = ({ children }) => {
     const [isAuth, setIsAuth] = useState(false)
     const [loading, setLoading] = useState(true)
 
-
-    async function registerUser(formdata, navigate,fetchPost) {
+    async function registerUser(formdata, navigate, fetchPost) {
         setLoading(true)
         try {
             const { data } = await axios.post('/api/auth/register', formdata);
@@ -26,7 +25,7 @@ export const UserContextProvider = ({ children }) => {
         }
     }
 
-    async function loginUser(email, password, navigate,fetchPost) {
+    async function loginUser(email, password, navigate, fetchPost) {
         setLoading(true)
         try {
             const { data } = await axios.post('/api/auth/login', { email, password });
@@ -74,7 +73,7 @@ export const UserContextProvider = ({ children }) => {
         }
     }
 
-    async function followUser(id,fetchUser) {
+    async function followUser(id, fetchUser) {
         try {
             const { data } = await axios.post("/api/user/follow/" + id)
             toast.success(data.message)
@@ -84,11 +83,21 @@ export const UserContextProvider = ({ children }) => {
             toast.error(error.response.data.message)
         }
     }
+    async function updateProfilePic(id, formdata,setFile) {
+        try {
+            const { data } = await axios.put("/api/user/" + id, formdata)
+            toast.success(data.message)
+            setFile(null)
+            fetchUser();
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
     useEffect(() => {
         fetchUser()
     }, [])
     return (
-        <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser }}>
+        <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser, updateProfilePic }}>
             {children}
             <Toaster />
         </UserContext.Provider>

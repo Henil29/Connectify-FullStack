@@ -9,18 +9,21 @@ import Modal from '../components/Modal';
 
 const UserAccount = ({ user: loggedInUser }) => {
 
-    const navigate = useNavigate();
-    const { posts, reels,loading } = PostData()
+    const navigate= useNavigate()
+    const { posts, reels } = PostData()
     const [user, setUser] = useState([])
     const params = useParams()
+    const [loading, setLoading] = useState(true)
 
     async function fetchUser() {
         try {
             const { data } = await axios.get("/api/user/" + params.id)
 
             setUser(data)
+            setLoading(false)
         } catch (error) {
             console.log(error)
+            setLoading(false)
         }
     }
     useEffect(() => {
@@ -85,8 +88,7 @@ const UserAccount = ({ user: loggedInUser }) => {
                         }
                         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md mt-14">
                             <div className="image flex flex-col justify-between mb-4 gap-4">
-                                <img src={user.profilePic.url} alt="" className="w-[180px] h-[180px] rounded-full object-cover shadow-md"
-                                />
+                                <img src={user.profilePic.url} alt="" className="w-[180px] h-[180px] rounded-full object-cover shadow-md"/>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className='text-gray-800 font-semibold '>{user.name}</p>
