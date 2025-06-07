@@ -6,6 +6,7 @@ import { PostData } from '../context/PostContex';
 import { Link } from 'react-router-dom';
 import { LoadingAnimation } from './Loading';
 import { MdDelete } from "react-icons/md";
+import SimpleModal from './SimpleModal';
 
 const formatTime = (createdAt) => {
     const now = new Date();
@@ -27,7 +28,7 @@ const PostCard = ({ type, value }) => {
     const [isLike, setIsLike] = useState(false);
     const [show, setShow] = useState(false);
     const { user } = UserData();
-    const { likePost, addComment, addLoading } = PostData();
+    const { likePost, addComment, addLoading, deletePost } = PostData();
     const videoRef = useRef(null);
 
     useEffect(() => {
@@ -57,11 +58,34 @@ const PostCard = ({ type, value }) => {
     const addCommentHandler = (e) => {
         e.preventDefault()
         addComment(value._id, comment, setComment)
-
+    }
+    const [showModal, setShowModal] = useState(false)
+    const closeModal = () => {
+        setShowModal(false)
     }
 
+    const deleteHandler = () => {
+        deletePost(value._id)
+    }
+
+    const [showInput, setShowInput] = useState(false)
+    const editHandler = () => {
+        setShowModal(false)
+        setShowInput(true)
+    }
     return (
         <div className="bg-gray-100 flex items-center justify-center pt-6 pb-16 px-4 relative">
+            <SimpleModal isOpen={showModal} onClose={closeModal}>
+                <div className="flex items-center justify-center gap-4 p-4 bg-white rounded-xl shadow-lg">
+                    <button onClick={editHandler} className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition'>
+                        Edit
+                    </button>
+                    <button onClick={deleteHandler} className='bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg transition'>
+                        Delete
+                    </button>
+                </div>
+            </SimpleModal>
+
             <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-5 relative overflow-hidden">
 
                 {type === 'reel' && show && (
@@ -80,13 +104,35 @@ const PostCard = ({ type, value }) => {
                     </div>
 
                     {value.owner._id === user._id && <button className="hover:bg-gray-100 rounded-full p-2 text-xl text-gray-500">
-                        <BsThreeDotsVertical />
+                        <BsThreeDotsVertical onClick={() => setShowModal(true)} />
                     </button>}
                 </div>
 
                 <div className="relative z-20">
-                    <p className="text-gray-700 text-sm">{value.caption}</p>
+                    {showInput ? (
+                        <div className="space-y-2">
+                            <input
+                                type="text"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                placeholder="Enter caption" value={value.caption}
+                            />
+                            <div className="flex gap-2">
+                                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition">
+                                    Update Caption
+                                </button>
+                                <button
+                                    onClick={() => setShowInput(false)}
+                                    className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md text-sm transition"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-gray-700 text-sm">{value.caption}</p>
+                    )}
                 </div>
+
 
                 {type === 'post' ? (
                     <img

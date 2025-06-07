@@ -10,9 +10,8 @@ import Modal from '../components/Modal';
 const UserAccount = ({ user: loggedInUser }) => {
 
     const navigate = useNavigate();
-    const { posts, reels } = PostData()
+    const { posts, reels,loading } = PostData()
     const [user, setUser] = useState([])
-    const [loading, setLoading] = useState(true)
     const params = useParams()
 
     async function fetchUser() {
@@ -64,7 +63,7 @@ const UserAccount = ({ user: loggedInUser }) => {
         try {
             const { data } = await axios.get(`/api/user/followdata/${user._id}`)
             setFollowersData(data.followers)
-            setFollowingData(data.followings)
+            setFollowingData(data.following)
         } catch (error) {
             console.log(error)
         }
