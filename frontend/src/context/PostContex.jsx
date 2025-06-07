@@ -21,7 +21,7 @@ export const PostContexProvider = ({ children }) => {
         }
     }
 
-    const [addLoading,setAddLoading]=useState(false)
+    const [addLoading, setAddLoading] = useState(false)
     async function addPost(formdata, setFile, setFilePrev, setCaption, type) {
         setAddLoading(true)
         try {
@@ -67,7 +67,7 @@ export const PostContexProvider = ({ children }) => {
     async function deletePost(id) {
         setLoading(true)
         try {
-            const{data}=await axios.delete("/api/post/"+id)
+            const { data } = await axios.delete("/api/post/" + id)
             toast.success(data.message)
             fetchPost()
             setLoading(false)
@@ -76,10 +76,20 @@ export const PostContexProvider = ({ children }) => {
             setLoading(false)
         }
     }
+
+    async function deleteComment(id, commentId) {
+        try {
+            const { data } = await axios.delete(`/api/post/comment/${id}?commentId=${commentId}`)
+            toast.success(data.message)
+            fetchPost()
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
     useEffect(() => {
         fetchPost()
     }, [])
-    return <PostContex.Provider value={{ reels, posts, addPost, likePost, addComment,loading, addLoading,fetchPost,deletePost }}>{children}</PostContex.Provider>
+    return <PostContex.Provider value={{ reels, posts, addPost, likePost, addComment, loading, addLoading, fetchPost, deletePost, deleteComment }}>{children}</PostContex.Provider>
 }
 
 export const PostData = () => useContext(PostContex)

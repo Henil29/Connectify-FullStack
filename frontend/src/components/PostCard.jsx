@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { LoadingAnimation } from './Loading';
 import { MdDelete } from "react-icons/md";
 import SimpleModal from './SimpleModal';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const formatTime = (createdAt) => {
     const now = new Date();
@@ -28,7 +30,7 @@ const PostCard = ({ type, value }) => {
     const [isLike, setIsLike] = useState(false);
     const [show, setShow] = useState(false);
     const { user } = UserData();
-    const { likePost, addComment, addLoading, deletePost } = PostData();
+    const { likePost, addComment, addLoading, deletePost, loading, fetchPost } = PostData();
     const videoRef = useRef(null);
 
     useEffect(() => {
@@ -73,6 +75,22 @@ const PostCard = ({ type, value }) => {
         setShowModal(false)
         setShowInput(true)
     }
+
+    const [caption, setCaption] = useState(value.caption ? value.caption : "")
+    const [captionLoading, setCaptionLoading] = useState(false)
+    async function updateCaption() {
+        setCaptionLoading(true)
+        try {
+            const { data } = await axios.put("/api/post/" + value._id, { caption })
+            toast.success(data.message)
+            setShowInput(false)
+            setCaptionLoading(false)
+            fetchPost()
+        } catch (error) {
+            toast.error(error.response.data.message)
+            setCaptionLoading(false)
+        }
+    }
     return (
         <div className="bg-gray-100 flex items-center justify-center pt-6 pb-16 px-4 relative">
             <SimpleModal isOpen={showModal} onClose={closeModal}>
@@ -114,11 +132,11 @@ const PostCard = ({ type, value }) => {
                             <input
                                 type="text"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                                placeholder="Enter caption" value={value.caption}
+                                placeholder="Enter caption" value={caption} onChange={(e) => setCaption(e.target.value)}
                             />
                             <div className="flex gap-2">
-                                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition">
-                                    Update Caption
+                                <button disabled={captionLoading} onClick={updateCaption} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition">
+                                    {captionLoading ? <LoadingAnimation /> : "Update Caption"}
                                 </button>
                                 <button
                                     onClick={() => setShowInput(false)}
@@ -196,13 +214,11 @@ const PostCard = ({ type, value }) => {
                             {value.comments && value.comments.length > 0 ? (
                                 value.comments.map((e) => (
                                     <Comment
-                                        name={e.user.name}
-                                        comment={e.comment}
-                                        profilePic={e.user.profilePic.url}
-                                        createdAt={e.createdAt}
-                                        userId={e.user._id}
-                                        cur_user={value.owner._id}
+                                        value={e}
                                         key={e._id}
+                                        user={user}
+                                        owner={value.owner._id}
+                                        id={value._id}
                                     />
                                 ))
                             ) : (
@@ -232,13 +248,11 @@ const PostCard = ({ type, value }) => {
                             {value.comments && value.comments.length > 0 ? (
                                 value.comments.map((e) => (
                                     <Comment
-                                        name={e.name}
-                                        comment={e.comment}
-                                        profilePic={e.user.profilePic.url}
-                                        createdAt={e.createdAt}
-                                        userId={e.user._id}
-                                        cur_user={value.owner._id}
+                                        value={e}
                                         key={e._id}
+                                        user={user}
+                                        owner={value.owner._id}
+                                        id={value._id}
                                     />
                                 ))
                             ) : (
@@ -264,25 +278,33 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard;
 
-export const Comment = ({ name, comment, profilePic, createdAt, userId, cur_user }) => {
+export const Comment = ({ value, user, owner, id }) => {
+
+    const canDelete = user._id === value.user._id || user._id === owner;
+    const { deleteComment } = PostData()
+
+    const deleteCommentHandler = () => {
+        deleteComment(id, value._id)
+    }
     return (
         <div className="flex items-start space-x-3">
-            <img src={profilePic} alt={name} className="w-8 h-8 rounded-full object-cover" />
+            <img src={value.user.profilePic.url} alt={value.user.name} className="w-8 h-8 rounded-full object-cover" />
             <div className="bg-white rounded-md px-2 py-1 flex-1">
                 <div className="flex items-center space-x-2">
-                    <Link to={`/user/${userId}`}>
+                    <Link to={`/user/${value.user._id}`}>
                         <p className="text-gray-700 font-medium text-sm">
-                            {name}
-                            <span className="text-gray-400 text-xs ml-2">{formatTime(createdAt)}</span>
+                            {value.user.name}
+                            <span className="text-gray-400 text-xs ml-2">{formatTime(value.createdAt)}</span>
                         </p>
                     </Link>
-                    {userId === cur_user && (
-                        <button className="text-red-500 text-base hover:text-red-600">
+
+                    {canDelete && (
+                        <button onClick={deleteCommentHandler} className="text-red-500 text-base hover:text-red-600">
                             <MdDelete />
                         </button>
                     )}
                 </div>
-                <p className="text-gray-900 text-sm">{comment}</p>
+                <p className="text-gray-900 text-sm">{value.comment}</p>
             </div>
         </div>
     );

@@ -19,10 +19,8 @@ const UserAccount = ({ user: loggedInUser }) => {
             const { data } = await axios.get("/api/user/" + params.id)
 
             setUser(data)
-            setLoading(false)
         } catch (error) {
             console.log(error)
-            setLoading(false)
         }
     }
     useEffect(() => {

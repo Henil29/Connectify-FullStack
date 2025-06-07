@@ -134,14 +134,14 @@ export const deleteComment = tryCatch(async (req, res) => {
         });
     }
 
-    if (!req.body.commentId) {
+    if (!req.query.commentId) {
         return res.status(400).json({
             message: "Comment ID is required"
         });
     }
 
     const commentIndex = post.comments.findIndex(
-        (item) => item._id.toString() === req.body.commentId.toString()
+        (item) => item._id.toString() === req.query.commentId.toString()
     )
     if (commentIndex === -1) {
         return res.status(404).json({
