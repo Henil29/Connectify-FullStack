@@ -9,7 +9,7 @@ import Modal from '../components/Modal';
 
 const UserAccount = ({ user: loggedInUser }) => {
 
-    const navigate= useNavigate()
+    const navigate = useNavigate()
     const { posts, reels } = PostData()
     const [user, setUser] = useState([])
     const params = useParams()
@@ -84,18 +84,18 @@ const UserAccount = ({ user: loggedInUser }) => {
 
                     <div className="bg-gray-100 flex flex-col gap-4 items-center justify-center pt-3">
                         {
-                            show && <Modal value={[followersData,followingData]} setShow={setShow} defaultTab={tab} />
+                            show && <Modal value={[followersData, followingData]} setShow={setShow} defaultTab={tab} />
                         }
                         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md mt-14">
                             <div className="image flex flex-col justify-between mb-4 gap-4">
-                                <img src={user.profilePic.url} alt="" className="w-[180px] h-[180px] rounded-full object-cover shadow-md"/>
+                                <img src={user.profilePic.url} alt="" className="w-[180px] h-[180px] rounded-full object-cover shadow-md" />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className='text-gray-800 font-semibold '>{user.name}</p>
                                 <p className='text-gray-500 text-sm'>{user.email}</p>
                                 <p className='text-gray-500 text-sm'>{user.gender}</p>
-                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => {setShow(true); setTab('followers')}}>{user.followers.length} followers</p>
-                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => {setShow(true); setTab('following');}}>{user.following.length} following</p>
+                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => { setShow(true); setTab('followers') }}>{user.followers.length} followers</p>
+                                <p className='text-gray-500 text-sm cursor-pointer' onClick={() => { setShow(true); setTab('following'); }}>{user.following.length} following</p>
                                 {
                                     user._id === loggedInUser._id ? "" :
                                         <>
@@ -118,8 +118,16 @@ const UserAccount = ({ user: loggedInUser }) => {
                             </div>
                         </div>
                         <div className="controls flex justify-center items-center bg-white p-4 rounded-md gap-7 mt-6">
-                            <button onClick={() => { setType('post') }}>Posts</button>
-                            <button onClick={() => { setType('reel') }}>Reels</button>
+                            <button onClick={() => { setType('post') }}
+                                className={`py-2 px-4 rounded-md ${type === 'post'
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-200 text-gray-800'
+                                    } transition-all duration-200`}>Posts</button>
+                            <button onClick={() => { setType('reel') }}
+                                className={`py-2 px-4 rounded-md ${type === 'reel'
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-200 text-gray-800'
+                                    } transition-all duration-200`}>Reels</button>
                         </div>
                         {
                             type === "post" &&

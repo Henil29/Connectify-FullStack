@@ -7,11 +7,12 @@ import { Loading } from '../components/Loading';
 import Modal from '../components/Modal';
 import axios from 'axios';
 import { MdEdit } from "react-icons/md";
+import toast from 'react-hot-toast';
 
 const Account = ({ user }) => {
     const navigate = useNavigate();
     const { logoutUser, updateProfilePic } = UserData();
-    const { posts, reels, loading } = PostData();
+    const { posts, reels, loading, fetchPost } = PostData();
 
     const [type, setType] = useState('post');
     const [show, setShow] = useState(false);
@@ -20,8 +21,11 @@ const Account = ({ user }) => {
     const [tab, setTab] = useState('followers');
     const [file, setFile] = useState('');
     const [showUploadModal, setShowUploadModal] = useState(false);
-    const {fetchPost}= PostData()
-    
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [updatedName, setUpdatedName] = useState(user.name);
+
     const logoutHandler = () => {
         logoutUser(navigate);
     };
@@ -38,7 +42,7 @@ const Account = ({ user }) => {
         if (file) formdata.append('file', file);
         if (updatedName.trim()) formdata.append('name', updatedName.trim());
 
-        updateProfilePic(user._id, formdata,fetchPost);
+        updateProfilePic(user._id, formdata, fetchPost);
         setShowUploadModal(false);
         setUpdatedName('');
     };
@@ -52,8 +56,19 @@ const Account = ({ user }) => {
             console.log(error);
         }
     }
-    const [updatedName, setUpdatedName] = useState(user.name);
+    async function updatePassword(e) {
+        e.preventDefault();
+        try {
+            const { data } = await axios.post("/api/user/" + user._id, { oldPassword, newPassword })
+            toast.success(data.message)
+            setOldPassword('')
+            setNewPassword('')
+            setShowPasswordModal(false)
 
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
     useEffect(() => {
         if (user && user._id) {
             followData();
@@ -71,6 +86,7 @@ const Account = ({ user }) => {
                 <>
                     {show && <Modal value={[followersData, followingData]} setShow={setShow} defaultTab={tab} />}
 
+                    {/* Update Profile Modal */}
                     {showUploadModal && (
                         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                             <div className="bg-white rounded-xl p-6 shadow-lg w-[300px] flex flex-col gap-4 items-center">
@@ -102,15 +118,64 @@ const Account = ({ user }) => {
                         </div>
                     )}
 
+                    {/* Update Password Modal */}
+                    {showPasswordModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                            <div className="bg-white rounded-xl p-6 shadow-lg w-[300px] flex flex-col gap-4 items-center">
+                                <h2 className="text-lg font-semibold text-gray-700">Update Password</h2>
+                                <form
+                                    onSubmit={updatePassword}
+                                    className="w-[300px] px-4 py-1 flex flex-col items-center gap-4 mt-2"
+                                >
+                                    <input
+                                        type="password"
+                                        placeholder="Old Password"
+                                        required
+                                        value={oldPassword}
+                                        onChange={(e) => setOldPassword(e.target.value)}
+                                        className="w-full border border-gray-300 px-3 py-1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    />
+                                    <input
+                                        type="password"
+                                        placeholder="New Password"
+                                        required
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        className="w-full border border-gray-300 px-3 py-1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    />
 
+                                    <div className="flex gap-3 justify-center mt-2">
+                                        <button
+                                            type="submit"
+                                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded-md font-medium shadow-sm transition"
+                                        >
+                                            Submit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPasswordModal(false)}
+                                            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-1.5 rounded-md font-medium shadow-sm transition"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Main Account Section */}
                     <div className="bg-gray-100 flex flex-col gap-4 items-center justify-center pt-3 px-4 min-h-screen">
                         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md w-full mt-14">
                             <div className="image flex flex-col items-center gap-4">
-                                <img
-                                    src={user.profilePic.url}
-                                    alt="Profile"
-                                    className="w-[180px] h-[180px] rounded-full object-cover shadow-md"
-                                />
+                                <div className="w-[180px] h-[180px] rounded-full overflow-hidden shadow-md">
+                                    <img
+                                        src={user.profilePic.url}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
                             </div>
 
                             <div className="flex flex-col gap-2 items-center text-center">
@@ -136,22 +201,32 @@ const Account = ({ user }) => {
                                     {user.following.length} following
                                 </p>
 
-                                <div className="flex gap-3 mt-4">
+                                {/* Buttons */}
+                                <div className="flex flex-col gap-2 mt-4">
+                                    <div className="flex gap-3 justify-center flex-wrap">
+                                        <button
+                                            onClick={() => setShowUploadModal(true)}
+                                            className="bg-blue-500 flex gap-1 justify-center items-center hover:bg-blue-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition">
+                                            Edit Bio <MdEdit />
+                                        </button>
+
+                                        <button
+                                            onClick={logoutHandler}
+                                            className="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition">
+                                            Logout
+                                        </button>
+                                    </div>
+
                                     <button
-                                        onClick={() => setShowUploadModal(true)}
-                                        className="bg-blue-500 flex gap-1 justify-center items-center hover:bg-blue-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition">
-                                        Edit Bio<MdEdit />
-                                    </button>
-                                    <button
-                                        onClick={logoutHandler}
-                                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition">
-                                        Logout
+                                        onClick={() => setShowPasswordModal(true)}
+                                        className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition self-center">
+                                        Update Password
                                     </button>
                                 </div>
-
                             </div>
                         </div>
 
+                        {/* Post/Reel Toggle */}
                         <div className="controls flex justify-center items-center bg-white p-4 rounded-md gap-7 mt-6 shadow-sm">
                             <button
                                 onClick={() => setType('post')}
@@ -173,6 +248,7 @@ const Account = ({ user }) => {
                             </button>
                         </div>
 
+                        {/* Post/Reel Content */}
                         <div className="mt-4 w-full max-w-md">
                             {type === 'post' ? (
                                 myPosts?.length > 0 ? (
