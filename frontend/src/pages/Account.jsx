@@ -6,6 +6,7 @@ import PostCard from '../components/PostCard';
 import { Loading } from '../components/Loading';
 import Modal from '../components/Modal';
 import axios from 'axios';
+import { MdEdit } from "react-icons/md";
 
 const Account = ({ user }) => {
     const navigate = useNavigate();
@@ -19,7 +20,8 @@ const Account = ({ user }) => {
     const [tab, setTab] = useState('followers');
     const [file, setFile] = useState('');
     const [showUploadModal, setShowUploadModal] = useState(false);
-
+    const {fetchPost}= PostData()
+    
     const logoutHandler = () => {
         logoutUser(navigate);
     };
@@ -30,11 +32,15 @@ const Account = ({ user }) => {
     };
 
     const changeImageHandler = () => {
-        if (!file) return;
+        if (!file && !updatedName.trim()) return;
+
         const formdata = new FormData();
-        formdata.append('file', file);
-        updateProfilePic(user._id, formdata,setFile);
+        if (file) formdata.append('file', file);
+        if (updatedName.trim()) formdata.append('name', updatedName.trim());
+
+        updateProfilePic(user._id, formdata,fetchPost);
         setShowUploadModal(false);
+        setUpdatedName('');
     };
 
     async function followData() {
@@ -46,6 +52,7 @@ const Account = ({ user }) => {
             console.log(error);
         }
     }
+    const [updatedName, setUpdatedName] = useState(user.name);
 
     useEffect(() => {
         if (user && user._id) {
@@ -67,25 +74,34 @@ const Account = ({ user }) => {
                     {showUploadModal && (
                         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                             <div className="bg-white rounded-xl p-6 shadow-lg w-[300px] flex flex-col gap-4 items-center">
-                                <h2 className="text-lg font-semibold text-gray-700">Update Profile Picture</h2>
+                                <h2 className="text-lg font-semibold text-gray-700">Update Profile</h2>
+
+                                <input
+                                    type="text"
+                                    placeholder="Enter new name"
+                                    value={updatedName}
+                                    onChange={(e) => setUpdatedName(e.target.value)}
+                                    className="w-full border px-2 py-1 rounded-md"
+                                />
+
                                 <input type="file" onChange={changeFileHandler} className="w-full" />
+
                                 <div className="flex gap-3 mt-2">
                                     <button
                                         onClick={changeImageHandler}
-                                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-md"
-                                    >
+                                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-md">
                                         Submit
                                     </button>
                                     <button
                                         onClick={() => setShowUploadModal(false)}
-                                        className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-1 rounded-md"
-                                    >
+                                        className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-1 rounded-md">
                                         Cancel
                                     </button>
                                 </div>
                             </div>
                         </div>
                     )}
+
 
                     <div className="bg-gray-100 flex flex-col gap-4 items-center justify-center pt-3 px-4 min-h-screen">
                         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md w-full mt-14">
@@ -123,8 +139,8 @@ const Account = ({ user }) => {
                                 <div className="flex gap-3 mt-4">
                                     <button
                                         onClick={() => setShowUploadModal(true)}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition">
-                                        Edit Profile
+                                        className="bg-blue-500 flex gap-1 justify-center items-center hover:bg-blue-600 text-white text-sm font-medium px-3 py-1.5 rounded-md shadow-sm transition">
+                                        Edit Bio<MdEdit />
                                     </button>
                                     <button
                                         onClick={logoutHandler}
@@ -140,8 +156,8 @@ const Account = ({ user }) => {
                             <button
                                 onClick={() => setType('post')}
                                 className={`py-2 px-4 rounded-md ${type === 'post'
-                                        ? 'bg-blue-500 text-white'
-                                        : 'bg-gray-200 text-gray-800'
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-200 text-gray-800'
                                     } transition-all duration-200`}
                             >
                                 Posts
@@ -149,8 +165,8 @@ const Account = ({ user }) => {
                             <button
                                 onClick={() => setType('reel')}
                                 className={`py-2 px-4 rounded-md ${type === 'reel'
-                                        ? 'bg-blue-500 text-white'
-                                        : 'bg-gray-200 text-gray-800'
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-200 text-gray-800'
                                     } transition-all duration-200`}
                             >
                                 Reels

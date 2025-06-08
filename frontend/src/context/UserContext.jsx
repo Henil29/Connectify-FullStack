@@ -83,14 +83,19 @@ export const UserContextProvider = ({ children }) => {
             toast.error(error.response.data.message)
         }
     }
-    async function updateProfilePic(id, formdata,setFile) {
+    async function updateProfilePic(id, formdata,fetchPost) {
+        setLoading(true)
         try {
             const { data } = await axios.put("/api/user/" + id, formdata)
             toast.success(data.message)
-            setFile(null)
             fetchUser();
+            fetchPost();
+            setLoading(false)
+
+
         } catch (error) {
             toast.error(error.response.data.message)
+            setLoading(false)
         }
     }
     useEffect(() => {
