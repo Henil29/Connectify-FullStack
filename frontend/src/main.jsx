@@ -4,12 +4,15 @@ import './index.css'
 import App from './App.jsx'
 import { UserContextProvider } from './context/UserContext.jsx'
 import { PostContexProvider } from './context/PostContex.jsx'
+import { ChatContextProvider } from './context/ChatContex.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <UserContextProvider>
       <PostContexProvider>
+        <ChatContextProvider>
         <App />
+        </ChatContextProvider>
       </PostContexProvider>
     </UserContextProvider>
   </StrictMode>,

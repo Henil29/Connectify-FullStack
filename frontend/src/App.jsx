@@ -29,7 +29,7 @@ function App() {
             <Route path="/login" element={!isAuth ? <Login /> : <Home />} />
             <Route path="/register" element={!isAuth ? <Register /> : <Home />} />
             <Route path="/search" element={!isAuth ? <Login /> : <Search />} />
-            <Route path="/chat" element={!isAuth ? <Login /> : <ChatPage />} />
+            <Route path="/chat" element={!isAuth ? <Login /> : <ChatPage user={user} />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
