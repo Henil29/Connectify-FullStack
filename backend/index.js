@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/post",postRoutes);
-app.use("/api/message",messageRoutes);
+app.use("/api/messages",messageRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

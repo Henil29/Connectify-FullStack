@@ -3,21 +3,21 @@ import { Message } from "../models/messages.js";
 import tryCatch from "../utils/tryCatch.js";
 
 export const sendMessage = tryCatch(async (req, res) => {
-    const { recipientId, message } = req.body;
+    const { reciverId, message } = req.body;
 
     const senderId = req.user._id;
-    if (!recipientId || !message) {
+    if (!reciverId || !message) {
         return res.status(400).json({
             message: "Recipient ID or message are required"
         });
     }
     let chat = await Chat.findOne({
-        users: { $all: [senderId, recipientId] }
+        users: { $all: [senderId, reciverId] }
     });
 
     if (!chat) {
         chat = new Chat({
-            users: [senderId, recipientId],
+            users: [senderId, reciverId],
             latestMessage: {
                 text: message,
                 sender: senderId
@@ -59,7 +59,6 @@ export const getAllMessages = tryCatch(async (req, res) => {
         chatId: chat._id,
     });
     res.status(200).json({
-        message: "Messages fetched successfully",
         messages
     });
 })

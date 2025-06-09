@@ -15,8 +15,9 @@ export const ChatContextProvider = ({ children }) => {
                 reciverId: id, 
                 message: "hii" 
             })
+            return data;
         } catch (error) {
-            toast.error(error, response.data.message)
+            toast.error(error.response.data.message)
             console.log(error)
         }
     }
