@@ -5,6 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import Chat from '../components/chat/Chat';
 import MessageContainer from '../components/chat/MessageContainer';
+import { SocketData } from '../context/SocketContext';
 
 const ChatPage = ({user}) => {
     const { createChat, selectedChat, setSelectedChat, chats, setChats } = ChatData()
@@ -40,6 +41,7 @@ const ChatPage = ({user}) => {
         setSearch(false)
         getAllChats();
     }
+    const {onlineUsers,socket} = SocketData()
     return (
         <div className='w-full max-w-[1600px] flex bg-white px-4 mt-2'>
             {/* Sidebar */}
@@ -77,7 +79,7 @@ const ChatPage = ({user}) => {
                     </> : <div className='flex flex-col gap-2 overflow-y-auto pr-2'>
                         {
                             chats.map(e => (
-                                <Chat key={e._id} chat={e} setSelectedChat={setSelectedChat}/>
+                                <Chat key={e._id} chat={e} setSelectedChat={setSelectedChat} isOnline={onlineUsers.includes(e.users[0]._id)}/>
                             ))
                         }
                     </div>

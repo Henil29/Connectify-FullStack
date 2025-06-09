@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './database/db.js';
 import cloudinary from 'cloudinary';
 import cookieParser from 'cookie-parser';
+import { app, server } from './soket/soket.js'
 
 // routes
 import authRoutes from './routes/authRoutes.js';
@@ -18,7 +19,6 @@ cloudinary.v2.config({
     secure: true
 });
 
-const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
@@ -29,12 +29,12 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.use("/api/auth",authRoutes);
-app.use("/api/user",userRoutes);
-app.use("/api/post",postRoutes);
-app.use("/api/messages",messageRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
+app.use("/api/messages", messageRoutes);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
     connectDB();
 });
