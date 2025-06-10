@@ -2,7 +2,7 @@ import { useEffect, useContext, createContext, useState } from "react";
 import io from "socket.io-client";
 import { UserData } from "./UserContext";
 
-const EndPoint = "http://localhost:8080";
+const EndPoint = "https://connectify-1opq.onrender.com";
 const SocketContext = createContext();
 
 export const SocketContextProvider = ({ children }) => {
