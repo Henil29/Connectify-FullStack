@@ -29,28 +29,37 @@ const Reels = () => {
         return <Loading/>
     }
     return (
-        <div className="min-h-screen bg-gray-100 py-8 px-4">
+        <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-4">
             <div className="max-w-4xl mx-auto">
                 <AddPost type="reel" />
 
-                <div className="mt-8 relative">
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden mx-auto max-w-[500px]">
+                <div className="mt-4 sm:mt-8 relative">
+                    <div className="md:bg-white md:rounded-xl md:shadow-lg overflow-hidden mx-auto max-w-[500px]">
                         {reels && reels.length > 0 ? (
                             <PostCard key={reels[index]._id} value={reels[index]} type={'reel'} />
                         ) : (
-                            <div className="p-8 text-center">
-                                <p className="text-gray-500 text-lg font-medium">No reels yet</p>
-                                <p className="text-gray-400 mt-2">Be the first to share a reel!</p>
+                            <div className="p-4 sm:p-8 text-center bg-white rounded-xl shadow-lg">
+                                <p className="text-gray-500 text-base sm:text-lg font-medium">No reels yet</p>
+                                <p className="text-gray-400 mt-2 text-sm sm:text-base">Be the first to share a reel!</p>
                             </div>
                         )}
                     </div>
 
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-4">
-                        <button onClick={prevReel} className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110">
-                            <FaArrowUp className="w-5 h-5" />
+                    {/* Navigation buttons - Side on desktop, bottom on mobile */}
+                    <div className="md:absolute md:right-4 md:top-1/2 md:-translate-y-1/2 flex md:flex-col gap-3 sm:gap-4 mt-2 sm:mt-0 md:mt-0 justify-center md:justify-start mb-16 sm:mb-0">
+                        <button 
+                            onClick={prevReel} 
+                            className="bg-blue-600 hover:bg-blue-700 text-white p-1.5 sm:p-2.5 md:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center gap-1.5 sm:gap-2 md:gap-0 md:flex-col px-2.5 sm:px-4 md:px-3"
+                        >
+                            <FaArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                            <span className="text-xs sm:text-sm md:hidden">Previous</span>
                         </button>
-                        <button onClick={nextReel} className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110">
-                            <FaArrowDownLong className="w-5 h-5" />
+                        <button 
+                            onClick={nextReel} 
+                            className="bg-blue-600 hover:bg-blue-700 text-white p-1.5 sm:p-2.5 md:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center gap-1.5 sm:gap-2 md:gap-0 md:flex-col px-2.5 sm:px-4 md:px-3"
+                        >
+                            <FaArrowDownLong className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                            <span className="text-xs sm:text-sm md:hidden">Next</span>
                         </button>
                     </div>
                 </div>

@@ -10,22 +10,22 @@ const NavigationBar = () => {
     const tab = location.pathname;
 
     return (
-        <div className='fixed bottom-0 w-full bg-white py-3 z-50'>
-            <div className="flex justify-around">
-                <Link to="/" className='flex flex-col items-center text-2xl'>
-                    {tab === "/" ? <AiFillHome /> : <AiOutlineHome />}
+        <div className='fixed bottom-0 w-full bg-white py-2 sm:py-3 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]'>
+            <div className="flex justify-around max-w-md mx-auto">
+                <Link to="/" className='flex flex-col items-center text-xl sm:text-2xl hover:scale-110 transition-transform'>
+                    {tab === "/" ? <AiFillHome className="text-blue-500" /> : <AiOutlineHome />}
                 </Link>
-                <Link to="/reels" className='flex flex-col items-center text-2xl'>
-                    {tab === "/reels" ? <BsFillCameraReelsFill /> : <BsCameraReels />}
+                <Link to="/reels" className='flex flex-col items-center text-xl sm:text-2xl hover:scale-110 transition-transform'>
+                    {tab === "/reels" ? <BsFillCameraReelsFill className="text-blue-500" /> : <BsCameraReels />}
                 </Link>
-                <Link to="/search" className='flex flex-col items-center text-2xl'>
-                    {tab === "/search" ? <IoSearchCircle /> : <IoSearchCircleOutline />}
+                <Link to="/search" className='flex flex-col items-center text-xl sm:text-2xl hover:scale-110 transition-transform'>
+                    {tab === "/search" ? <IoSearchCircle className="text-blue-500" /> : <IoSearchCircleOutline />}
                 </Link>
-                <Link to="/chat" className='flex flex-col items-center text-2xl'>
-                    {tab === "/chat" ? <IoChatbubbleEllipses /> : <IoChatbubbleEllipsesOutline />}
+                <Link to="/chat" className='flex flex-col items-center text-xl sm:text-2xl hover:scale-110 transition-transform'>
+                    {tab === "/chat" ? <IoChatbubbleEllipses className="text-blue-500" /> : <IoChatbubbleEllipsesOutline />}
                 </Link>
-                <Link to="/account" className='flex flex-col items-center text-2xl'>
-                    {tab === "/account" ? <RiAccountCircleFill /> : <RiAccountCircleLine />}
+                <Link to="/account" className='flex flex-col items-center text-xl sm:text-2xl hover:scale-110 transition-transform'>
+                    {tab === "/account" ? <RiAccountCircleFill className="text-blue-500" /> : <RiAccountCircleLine />}
                 </Link>
             </div>
         </div>

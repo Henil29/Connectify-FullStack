@@ -1,5 +1,6 @@
 import { Chat } from "../models/chatMode.js";
 import { Message } from "../models/messages.js";
+import { getReciverSocketId, io } from "../soket/soket.js";
 import tryCatch from "../utils/tryCatch.js";
 
 export const sendMessage = tryCatch(async (req, res) => {
@@ -37,10 +38,14 @@ export const sendMessage = tryCatch(async (req, res) => {
             sender: senderId
         }
     });
-    res.status(201).json({
-        message: "Message sent successfully",
+
+    const reciverSocketId =getReciverSocketId(reciverId)
+    if(reciverSocketId) {
+        io.to(reciverSocketId).emit("newMessage",newMessage)
+    }
+    res.status(201).json(
         newMessage
-    });
+    );
 })
 
 export const getAllMessages = tryCatch(async (req, res) => {
@@ -69,7 +74,7 @@ export const getAllChats = tryCatch(async (req, res) => {
     }).populate({
         path: "users",
         select: "name profilePic"
-    });
+    })
     chats.forEach((e) => {
         e.users = e.users.filter(
             (user) => user._id.toString() !== req.user._id.toString()

@@ -92,31 +92,31 @@ const PostCard = ({ type, value }) => {
         }
     }
     return (
-        <div className="bg-gray-100 flex items-center justify-center pt-6 pb-16 px-4 relative">
+        <div className="bg-gray-100 flex items-center justify-center pt-4 sm:pt-6 pb-4 px-2 sm:px-4 relative">
             <SimpleModal isOpen={showModal} onClose={closeModal}>
-                <div className="flex items-center justify-center gap-4 p-4 bg-white rounded-xl shadow-lg">
-                    <button onClick={editHandler} className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition'>
+                <div className="flex items-center justify-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl shadow-lg">
+                    <button onClick={editHandler} className='bg-blue-600 hover:bg-blue-700 text-white py-1.5 sm:py-2 px-3 sm:px-4 rounded-lg transition text-sm sm:text-base'>
                         Edit
                     </button>
-                    <button onClick={deleteHandler} className='bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg transition'>
+                    <button onClick={deleteHandler} className='bg-red-600 hover:bg-red-700 text-white py-1.5 sm:py-2 px-3 sm:px-4 rounded-lg transition text-sm sm:text-base'>
                         Delete
                     </button>
                 </div>
             </SimpleModal>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-5 relative overflow-hidden">
+            <div className="bg-white p-3 sm:p-6 rounded-2xl shadow-lg w-full max-w-md space-y-4 sm:space-y-5 relative overflow-hidden">
 
                 {type === 'reel' && show && (
                     <div className="absolute inset-0 bg-black bg-opacity-50 z-10 rounded-2xl pointer-events-none" />
                 )}
 
                 <div className="flex items-center justify-between relative z-20">
-                    <div className="flex items-center space-x-3">
-                        <Link to={`/user/${value.owner._id}`} className="flex items-center space-x-3">
-                            <img src={value.owner.profilePic.url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                        <Link to={value.owner._id === user._id ? "/account" : `/user/${value.owner._id}`} className="flex items-center space-x-2 sm:space-x-3">
+                            <img src={value.owner.profilePic.url} alt="" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover" />
                             <div>
-                                <p className="text-gray-900 font-medium text-sm">{value.owner.name}</p>
-                                <p className="text-gray-400 text-xs">{formatTime(value.createdAt)}</p>
+                                <p className="text-gray-900 font-medium text-xs sm:text-sm">{value.owner.name}</p>
+                                <p className="text-gray-400 text-[10px] sm:text-xs">{formatTime(value.createdAt)}</p>
                             </div>
                         </Link>
                     </div>
@@ -131,23 +131,23 @@ const PostCard = ({ type, value }) => {
                         <div className="space-y-2">
                             <input
                                 type="text"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                className="w-full px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
                                 placeholder="Enter caption" value={caption} onChange={(e) => setCaption(e.target.value)}
                             />
                             <div className="flex gap-2">
-                                <button disabled={captionLoading} onClick={updateCaption} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition">
+                                <button disabled={captionLoading} onClick={updateCaption} className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm transition">
                                     {captionLoading ? <LoadingAnimation /> : "Update Caption"}
                                 </button>
                                 <button
                                     onClick={() => setShowInput(false)}
-                                    className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md text-sm transition"
+                                    className="bg-gray-300 hover:bg-gray-400 text-black px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm transition"
                                 >
                                     Close
                                 </button>
                             </div>
                         </div>
                     ) : (
-                        <p className="text-gray-700 text-sm">{value.caption}</p>
+                        <p className="text-gray-700 text-xs sm:text-sm">{value.caption}</p>
                     )}
                 </div>
 
@@ -155,10 +155,11 @@ const PostCard = ({ type, value }) => {
                 {type === 'post' ? (
                     <img
                         src={value.post.url}
-                        className="rounded-xl"
+                        className="rounded-xl w-full h-auto object-cover"
+                        alt="Post content"
                     />
                 ) : (
-                    <div className="relative rounded-xl overflow-hidden z-20">
+                    <div className="relative rounded-xl overflow-hidden z-20 aspect-[9/16]">
                         <video
                             ref={videoRef}
                             src={value.post.url}
@@ -171,11 +172,11 @@ const PostCard = ({ type, value }) => {
                     </div>
                 )}
 
-                <div className="flex items-center justify-between text-sm text-gray-600 relative z-20">
+                <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 relative z-20">
                     <div className="flex items-center space-x-2">
                         <span
                             onClick={likeHandler}
-                            className="text-2xl cursor-pointer"
+                            className="text-xl sm:text-2xl cursor-pointer"
                         >
                             {isLike ? (
                                 <IoHeart className="text-red-500" />
@@ -187,7 +188,7 @@ const PostCard = ({ type, value }) => {
                     </div>
                     <button
                         onClick={() => setShow(!show)}
-                        className="flex items-center space-x-2 px-3 py-1 rounded-full hover:bg-gray-100"
+                        className="flex items-center space-x-2 px-2 sm:px-3 py-1 rounded-full hover:bg-gray-100"
                     >
                         <BsChatFill className="text-gray-500" />
                         <span>{value.comments.length} Comments</span>
@@ -196,21 +197,20 @@ const PostCard = ({ type, value }) => {
 
                 {type === 'reel' && (
                     <div
-                        className={`absolute bottom-0 left-0 w-full bg-gray-100 text-black shadow-lg p-4 transition-transform duration-300 ease-in-out z-50 ${show ? 'translate-y-0' : 'translate-y-full'
-                            }`}
+                        className={`absolute bottom-0 left-0 w-full bg-gray-100 text-black shadow-lg p-3 sm:p-4 transition-transform duration-300 ease-in-out z-50 ${show ? 'translate-y-0' : 'translate-y-full'}`}
                         style={{ height: '250px', borderTopLeftRadius: '1rem', borderTopRightRadius: '1rem' }}
                     >
                         <div className="flex justify-between items-center mb-2">
-                            <h2 className="font-semibold text-sm">Comments</h2>
+                            <h2 className="font-semibold text-xs sm:text-sm">Comments</h2>
                             <button
                                 onClick={() => setShow(false)}
-                                className="text-sm bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded"
+                                className="text-xs sm:text-sm bg-red-100 hover:bg-red-200 text-red-600 px-2 sm:px-3 py-1 rounded"
                             >
                                 Close
                             </button>
                         </div>
                         <hr className="border-gray-700" />
-                        <div className="mt-2 h-[140px] overflow-y-auto space-y-3 pr-2">
+                        <div className="mt-2 h-[140px] overflow-y-auto space-y-2 sm:space-y-3 pr-2">
                             {value.comments && value.comments.length > 0 ? (
                                 value.comments.map((e) => (
                                     <Comment
@@ -225,13 +225,13 @@ const PostCard = ({ type, value }) => {
                                 <p className="text-sm text-gray-400 mt-4">No comments yet</p>
                             )}
                         </div>
-                        <form className="flex gap-3 mb-4" onSubmit={addCommentHandler}>
+                        <form className="flex gap-2 sm:gap-3 mb-4" onSubmit={addCommentHandler}>
                             <input
                                 type="text" required
-                                className="flex-1 border border-gray-700 bg-gray-100 rounded-md px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="flex-1 border border-gray-700 bg-gray-100 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="Enter comment" value={comment} onChange={e => setComment(e.target.value)}
                             />
-                            <button disabled={addLoading} type='submit' className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm">
+                            <button disabled={addLoading} type='submit' className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm">
                                 {addLoading ? <LoadingAnimation /> : "Add"}
                             </button>
                         </form>
@@ -291,7 +291,7 @@ export const Comment = ({ value, user, owner, id }) => {
             <img src={value.user.profilePic.url} alt={value.user.name} className="w-8 h-8 rounded-full object-cover" />
             <div className="bg-white rounded-md px-2 py-1 flex-1">
                 <div className="flex items-center space-x-2">
-                    <Link to={`/user/${value.user._id}`}>
+                    <Link to={value.user._id === user._id ? "/account" : `/user/${value.user._id}`}>
                         <p className="text-gray-700 font-medium text-sm">
                             {value.user.name}
                             <span className="text-gray-400 text-xs ml-2">{formatTime(value.createdAt)}</span>
