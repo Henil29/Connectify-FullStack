@@ -72,18 +72,9 @@
 
 ## 🌐 Live Demo
 
-**Coming Soon**  
-*(Add Vercel/Render/Netlify deployment links once hosted)*
+*https://connectify-1opq.onrender.com/*
 
 ---
-
-## 📸 Screenshots
-
-*(Add UI screenshots here after building the interface)*  
-Example:
-
-
-![Chat UI](./screenshots/chat-ui.png)
 
 ## 🤝 Contributing
 
