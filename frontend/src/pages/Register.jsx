@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { UserData } from '../context/UserContext';
-import { PostData } from '../context/PostContex';
+import toast from 'react-hot-toast'
+import axios from 'axios'
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -10,23 +10,42 @@ const Register = () => {
     const [gender, setGender] = useState("");
     const [file, setFile] = useState("");
     const [filePrev, setFilePrev] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const { registerUser, loading } = UserData()
-    const { fetchPost } = PostData()
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        const formdata = new FormData();
 
-        formdata.append("name", name)
-        formdata.append("email", email)
-        formdata.append("password", password)
-        formdata.append("gender", gender)
-        formdata.append("file", file)
+        try {
+            setLoading(true);
+            console.log("Sending OTP request for email:", email); // Debug log
 
-        registerUser(formdata, navigate,fetchPost)
+            // Send OTP to user's email
+            const { data } = await axios.post('/api/auth/send-otp', { email });
+            console.log("OTP response:", data); // Debug log
+            toast.success(data.message || "OTP sent to your email");
+
+            // Save form data to localStorage temporarily
+            const formDataToStore = {
+                name,
+                email,
+                password,
+                gender,
+            };
+
+            sessionStorage.setItem("registerData", JSON.stringify(formDataToStore));
+            sessionStorage.setItem("profileImage", filePrev);
+
+            navigate("/verify-otp");
+        } catch (error) {
+            console.error("Error in submitHandler:", error.response || error); // Debug log
+            toast.error(error?.response?.data?.message || "Failed to send OTP");
+        } finally {
+            setLoading(false);
+        }
     }
+
     const changeFileHandler = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -36,6 +55,7 @@ const Register = () => {
             setFile(file);
         }
     }
+
     return (
         <>
             {
@@ -116,7 +136,7 @@ const Register = () => {
                                             type="submit"
                                             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 text-sm sm:text-base mt-2"
                                         >
-                                            Create Account
+                                            Send OTP
                                         </button>
                                     </div>
                                 </form>
@@ -141,4 +161,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default Register;

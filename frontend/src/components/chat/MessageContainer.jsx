@@ -65,12 +65,6 @@ const MessageContainer = ({ selectedChat, setChats }) => {
             {
                 selectedChat && (
                     <div className="flex flex-col h-full">
-                        {/* Chat header */}
-                        <div className="flex w-full h-14 items-center gap-4 border-b border-gray-200 px-2 bg-gray-50 rounded-t-xl">
-                            <img src={selectedChat.users[0].profilePic.url} className='w-10 h-10 rounded-full border-2 border-blue-200 object-cover' alt="" />
-                            <span className="font-semibold text-lg text-gray-700">{selectedChat.users[0].name}</span>
-                        </div>
-
                         {loading ? <LoadingAnimation /> : (
                             <>
                                 {/* Messages container takes available space */}

@@ -22,7 +22,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0",
     "multer": "^2.0.0",
+    "nodemailer": "^7.0.3",
     "react-hot-toast": "^2.5.2",
+    "resend": "^4.5.2",
     "socket.io": "^4.8.1",
     "soket.io": "^0.0.1-security"
   }

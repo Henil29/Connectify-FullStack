@@ -83,7 +83,7 @@ export const UserContextProvider = ({ children }) => {
             toast.error(error.response.data.message)
         }
     }
-    async function updateProfilePic(id, formdata,fetchPost) {
+    async function updateProfilePic(id, formdata, fetchPost) {
         setLoading(true)
         try {
             const { data } = await axios.put("/api/user/" + id, formdata)
@@ -98,6 +98,25 @@ export const UserContextProvider = ({ children }) => {
             setLoading(false)
         }
     }
+    async function registerUser(formdata, navigate, fetchPost) {
+        setLoading(true);
+        try {
+            const email = formdata.get("email");
+
+            // Send OTP first
+            await axios.post("/api/otp/send", { email });
+            toast.success("OTP sent to your email");
+
+            // Store form data temporarily
+            sessionStorage.setItem("registerData", JSON.stringify(Object.fromEntries(formdata.entries())));
+            navigate("/verify-otp");
+            setLoading(false);
+        } catch (error) {
+            toast.error(error.response.data.message);
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchUser()
     }, [])

@@ -12,6 +12,7 @@ const ChatPage = ({ user }) => {
     const [users, setUsers] = useState([])
     const [query, setQuery] = useState("")
     const [search, setSearch] = useState(false)
+    const [showChat, setShowChat] = useState(false)
 
     async function fetchAllUsers() {
         try {
@@ -50,15 +51,16 @@ const ChatPage = ({ user }) => {
     return (
         <div className="w-full max-w-[1600px] flex bg-white px-2 mt-2 overflow-hidden">
             {/* Sidebar */}
-            <div className="group relative transition-all duration-300 ease-in-out h-[89vh] bg-[#f7f8fa] rounded-2xl p-2 shadow border border-gray-200 
-                w-[20%] hover:w-[80%] 
-                md:w-[340px] md:hover:w-[340px] 
-                flex flex-col overflow-hidden z-20">
+            <div className={`group relative transition-all duration-300 ease-in-out h-[89vh] bg-[#f7f8fa] rounded-2xl p-2 shadow border border-gray-200 
+                ${showChat ? 'hidden md:block' : 'w-full md:w-[80px]'} 
+                md:hover:w-[340px]
+                lg:w-[340px] lg:hover:w-[340px] 
+                flex flex-col overflow-hidden z-20`}>
                 <div className="flex items-center justify-between mb-4 px-2">
                     <button className='bg-blue-500 text-white p-2 md:p-3 rounded-full shadow hover:bg-blue-600 transition' onClick={() => setSearch(!search)}>
                         {search ? <MdClose size={20} className="md:text-[22px]" /> : <FaSearch size={18} className="md:text-[20px]" />}
                     </button>
-                    <span className="font-bold text-base md:text-lg text-gray-700 hidden group-hover:block md:block">Chats</span>
+                    <span className="font-bold text-base md:text-lg text-gray-700 hidden md:group-hover:block">Chats</span>
                 </div>
 
                 {search ? (
@@ -84,7 +86,7 @@ const ChatPage = ({ user }) => {
                                         />
                                         <div className="absolute bottom-0 right-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-green-500 rounded-full border-2 border-white"></div>
                                     </div>
-                                    <div className="flex flex-col">
+                                    <div className="hidden md:group-hover:flex flex-col">
                                         <span className="font-semibold text-sm md:text-base text-gray-800 group-hover:text-blue-600 transition-colors">{e.name}</span>
                                         <span className="text-xs md:text-sm text-gray-500">Click to start chat</span>
                                     </div>
@@ -100,7 +102,10 @@ const ChatPage = ({ user }) => {
                             <Chat
                                 key={e._id}
                                 chat={e}
-                                setSelectedChat={setSelectedChat}
+                                setSelectedChat={(chat) => {
+                                    setSelectedChat(chat);
+                                    setShowChat(true);
+                                }}
                                 isOnline={onlineUsers.includes(e.users[0]._id)}
                                 showDetails={false}
                             />
@@ -110,9 +115,10 @@ const ChatPage = ({ user }) => {
             </div>
 
             {/* Main Chat Area */}
-            <div className="transition-all duration-300 ease-in-out h-[89vh] bg-[#f7f8fa] rounded-2xl flex flex-col shadow border border-gray-200 p-0 
-                w-[80%] group-hover:w-[20%] 
-                md:w-[calc(100%-340px)] md:group-hover:w-[calc(100%-340px)]">
+            <div className={`transition-all duration-300 ease-in-out h-[89vh] bg-[#f7f8fa] rounded-2xl flex flex-col shadow border border-gray-200 p-0 
+                ${showChat ? 'w-full md:w-[calc(100%-80px)]' : 'hidden md:block md:w-[calc(100%-80px)]'} 
+                md:group-hover:w-[calc(100%-340px)]
+                lg:w-[calc(100%-340px)] lg:group-hover:w-[calc(100%-340px)]`}>
                 {selectedChat === null ? (
                     <div className="w-full h-full flex flex-col justify-center items-center text-xl md:text-2xl text-gray-500 bg-[#f7f8fa] rounded-2xl">
                         <span>Hi👋.. <span className="font-semibold text-blue-500">{user.name}</span></span>
@@ -120,6 +126,21 @@ const ChatPage = ({ user }) => {
                     </div>
                 ) : (
                     <div className="w-full h-full bg-[#f7f8fa] flex flex-col rounded-2xl">
+                        {/* Chat header with back button - only visible on small screens */}
+                        <div className="md:hidden flex w-full h-14 items-center gap-4 border-b border-gray-200 px-2 bg-gray-50 rounded-t-xl relative">
+                            <button 
+                                onClick={() => setShowChat(false)}
+                                className="absolute left-2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-50"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <div className="flex items-center gap-4 w-full pl-10">
+                                <img src={selectedChat.users[0].profilePic.url} className='w-10 h-10 rounded-full border-2 border-blue-200 object-cover' alt="" />
+                                <span className="font-semibold text-lg text-gray-700">{selectedChat.users[0].name}</span>
+                            </div>
+                        </div>
                         <MessageContainer selectedChat={selectedChat} setChats={setChats} />
                     </div>
                 )}

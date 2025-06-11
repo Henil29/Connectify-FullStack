@@ -54,7 +54,7 @@ const Login = () => {
                   </div>
                 </form>
               </div>
-              <div className="w-full md:w-1/3 bg-gradient-to-l from-blue-400 to-yellow-400 p-6 sm:p-8 flex items-center justify-center">
+              <div className="w-full md:w-1/3 bg-gradient-to-l from-blue-400 to-yellow-400 p-6 sm:p-8 flex items-center justify-center min-h-[400px]">
                 <div className="text-white text-center space-y-4">
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Don't have an account?</h1>
                   <p className="text-sm sm:text-base">Join our community today!</p>

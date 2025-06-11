@@ -13,6 +13,7 @@ import { Loading } from './components/Loading';
 import UserAccount from './pages/UserAccount';
 import Search from './pages/Search';
 import ChatPage from './pages/ChatPage';
+import VerifyOtp from './pages/VerifyOtp';
 
 function App() {
   const { loading, isAuth, user } = UserData()
@@ -28,6 +29,7 @@ function App() {
             <Route path="/user/:id" element={isAuth ? <UserAccount user={user} /> : <Login />} />
             <Route path="/login" element={!isAuth ? <Login /> : <Home />} />
             <Route path="/register" element={!isAuth ? <Register /> : <Home />} />
+            <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/search" element={!isAuth ? <Login /> : <Search />} />
             <Route path="/chat" element={!isAuth ? <Login /> : <ChatPage user={user} />} />
 

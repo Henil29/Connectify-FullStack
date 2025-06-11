@@ -21,7 +21,7 @@ const Chat = ({ chat, setSelectedChat, isOnline }) => {
                         <div className="flex-shrink-0">
                             <img src={user.profilePic.url} className="w-12 h-12 rounded-full border-2 border-green-200 object-cover" />
                         </div>
-                        <div className="hidden group-hover:flex md:flex flex-col justify-center overflow-hidden">
+                        <div className="hidden md:group-hover:flex md:flex flex-col justify-center overflow-hidden">
                             <div className="flex items-center gap-2">
                                 <span className="font-semibold text-gray-700">{user.name}</span>
                                 {isOnline && (
